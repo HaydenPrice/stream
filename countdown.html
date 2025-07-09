@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Countdown Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* * Twitch Panel Styling
+         * Twitch panels are 320px wide. The height can be variable.
+         * This CSS is designed to match the Twitch dark theme.
+         */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #18181b; /* Twitch's dark background color */
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            width: 320px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .countdown-container {
+            width: 100%;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #a970ff; /* Twitch's purple accent color */
+        }
+
+        #countdown {
+            display: flex;
+            justify-content: space-around;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .time-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-value {
+            line-height: 1;
+        }
+        
+        .time-label {
+            font-size: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+
+        #live-message {
+            font-size: 24px;
+            font-weight: 700;
+            color: #10e064; /* A bright green for "Live" */
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="countdown-container">
+        <h2>Next Stream In</h2>
+        <div id="countdown">
+            <div class="time-block">
+                <span id="days" class="time-value">00</span>
+                <span class="time-label">Days</span>
+            </div>
+            <div class="time-block">
+                <span id="hours" class="time-value">00</span>
+                <span class="time-label">Hours</span>
+            </div>
+            <div class="time-block">
+                <span id="minutes" class="time-value">00</span>
+                <span class="time-label">Mins</span>
+            </div>
+            <div class="time-block">
+                <span id="seconds" class="time-value">00</span>
+                <span class="time-label">Secs</span>
+            </div>
+        </div>
+        <div id="live-message">
+            I'M LIVE NOW!
+        </div>
+    </div>
+
+    <script>
+        // --- SET YOUR STREAM DATE AND TIME HERE ---
+        // The format is "Month Day, Year HH:MM:SS"
+        const countDownDate = new Date("Aug 1, 2025 19:00:00").getTime();
+
+        // Get the HTML elements we need to update
+        const daysEl = document.getElementById("days");
+        const hoursEl = document.getElementById("hours");
+        const minutesEl = document.getElementById("minutes");
+        const secondsEl = document.getElementById("seconds");
+        const countdownEl = document.getElementById("countdown");
+        const liveMessageEl = document.getElementById("live-message");
+        const titleEl = document.querySelector('h2');
+
+        // Update the countdown every 1 second
+        const countdownInterval = setInterval(function() {
+
+            // Get today's date and time
+            const now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            const distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the corresponding elements
+            // We use padStart to make sure there are always two digits
+            daysEl.innerHTML = String(days).padStart(2, '0');
+            hoursEl.innerHTML = String(hours).padStart(2, '0');
+            minutesEl.innerHTML = String(minutes).padStart(2, '0');
+            secondsEl.innerHTML = String(seconds).padStart(2, '0');
+
+            // If the count down is finished, show the "Live Now" message
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownEl.style.display = "none";
+                titleEl.style.display = "none";
+                liveMessageEl.style.display = "block";
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
